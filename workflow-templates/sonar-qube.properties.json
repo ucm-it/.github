@@ -1,0 +1,9 @@
+{
+    "name": "SonarQube Scanning",
+    "description": "Workflow template for connecting your GitHub repository with SonarQube",
+    "iconName": "octicon shield-check",
+    "categories": [],
+    "filePatterns": [
+        "sonar-project.properties$"
+    ]
+}

@@ -1,0 +1,21 @@
+name: SonarQube
+
+on:
+  push:
+    branches:
+      - $default-branch
+
+jobs:
+  build:
+    name: Analyze
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+
+      - uses: sonarsource/sonarqube-scan-action@master
+        env:
+          # These secrets do NOT need to be set or changed, they are available organization-wide
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
