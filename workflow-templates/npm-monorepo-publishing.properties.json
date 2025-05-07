@@ -1,0 +1,12 @@
+{
+    "name": "npm Monorepo Packages Smart Publisher",
+    "description": "Workflow template that handles publishing packages in a monorepo based on tags and branch pushes.",
+    "iconName": "octicon package-dependents",
+    "categories": [
+        "TypeScript"
+    ],
+    "filePatterns": [
+        "package.json$",
+        "turbo.json[c]?$"
+    ]
+}
