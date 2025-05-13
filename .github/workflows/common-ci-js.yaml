@@ -1,0 +1,114 @@
+# This is a reusable workflow for JavaScript projects that includes jobs for
+# linting, formatting, and unit testing. It is designed to be called from other
+# workflows, allowing for easy reuse across multiple repositories.
+#
+# https://docs.github.com/en/actions/sharing-automations/reusing-workflows
+
+on:
+  workflow_call:
+    inputs:
+      disable-formatting:
+        type: boolean
+        description: Disable the formatting job
+        required: false
+        default: false
+      disable-linting:
+        type: boolean
+        description: Disable the linting job
+        required: false
+        default: false
+      disable-testing:
+        type: boolean
+        description: Disable the unit testing job
+        required: false
+        default: false
+      node-version:
+        type: string
+        description: |
+          The Node.js version to use; this value corresponds to `node-version`
+          in the `actions/setup-node` action.
+        required: true
+        default: '20.x'
+    secrets:
+      node-auth-token:
+        description: |
+          The GitHub token used to authenticate with the npm registry. This is
+          required for installing packages from private repositories.
+        required: true
+
+jobs:
+  linting:
+    name: Linting
+    if: ${{ inputs.disable-linting != 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: npm
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@ucm-it'
+          always-auth: true
+
+      - name: actionlint
+        uses: raven-actions/actionlint@v2
+        with:
+          pyflakes: false
+
+      - name: Install packages and run linters
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.node-auth-token }}
+        run: |
+          npm ci
+          npm run lint
+ 
+  formatter:
+    name: Formatting
+    if: ${{ inputs.disable-formatting != 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: npm
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@ucm-it'
+          always-auth: true
+
+      - name: Install dependency packages and run formatters
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.node-auth-token }}
+        run: |
+          npm ci
+          npm run format
+          git diff --exit-code
+
+  unit_test:
+    name: Unit Testing
+    if: ${{ inputs.disable-testing != 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: npm
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@ucm-it'
+          always-auth: true
+
+      - name: Install dependency packages and run unit tests
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.node-auth-token }}
+        run: |
+          npm ci
+          npm run build
+          npm run test

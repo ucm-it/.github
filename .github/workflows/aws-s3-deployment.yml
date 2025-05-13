@@ -1,0 +1,153 @@
+# This is a reusable workflow for deploying a Next.js client-only website to an
+# AWS S3 bucket. It is designed to be called from other workflows, allowing for
+# easy reuse across multiple repositories.
+# https://docs.github.com/en/actions/sharing-automations/reusing-workflows
+#
+# === Required Permissions ===
+#
+# These permissions need to be set by the caller workflow!
+# https://github.com/orgs/community/discussions/76409#discussioncomment-11260212
+# 
+# ```
+# permissions:
+#   contents: read
+#   id-token: write
+# ```
+
+on:
+  workflow_call:
+    inputs:
+      conditions:
+        type: string
+        description: |
+          The conditions to determine_the target environment. This value is used
+          in the `conditional-outputs` action to set the build suffix and other
+          environment-specific settings.
+        required: true
+      node-version:
+        type: string
+        description: |
+          The Node.js version to use; this value corresponds to `node-version`
+          in the `actions/setup-node` action.
+        required: true
+        default: '20.x'
+      project-name:
+        type: string
+        description: |
+          The name of the project; this value is used in the Slack notification
+          message.
+        required: true
+      target-environment:
+        type: string
+        description: |
+          The target environment for deployment. This value is used to determine
+          the build suffix and other environment-specific settings.
+        required: false
+    secrets:
+      cloudfront-dist:
+        description: |
+          The CloudFront distribution ID for the production environment; this
+          is used to invalidate the cache after deployment.
+        required: true
+      iam-role-arn:
+        description: |
+          The ARN of the IAM role to assume for AWS credentials.
+        required: true
+      node-auth-token:
+        description: |
+          The GitHub token used to authenticate with the npm registry. This is
+          required for installing packages from private repositories.
+        required: true
+      reporting-api-key:
+        description: |
+          The API key used for error reporting (e.g. BugSnag).
+        required: true
+      slack-bot-token:
+        description: |
+          The Slack bot token used to send notifications.
+        required: true
+
+jobs:
+  determine-environment:
+    name: Determine Environment
+    runs-on: ubuntu-latest
+    outputs:
+      build-suffix: ${{ steps.calculate-target.outputs.build-suffix }}
+      environment: ${{ steps.calculate-target.outputs.condition-name }}
+      slack-channel: ${{ steps.calculate-target.outputs.slack-channel }}
+      website: ${{ steps.calculate-target.outputs.website }}
+    steps:
+      - name: Calculate Target
+        id: calculate-target
+        uses: ucm-it/conditional-outputs@v1
+        with:
+          condition-name: ${{ inputs.target-environment }}
+          conditions: ${{ inputs.conditions }}
+
+  deploy-to-s3:
+    name: Deploy to S3
+    needs: determine-environment
+    runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ needs.determine-environment.outputs.environment }}
+      cancel-in-progress: true
+    permissions:
+      contents: read
+      id-token: write
+    environment:
+      name: ${{ needs.determine-environment.outputs.environment }}
+      url: ${{ needs.determine-environment.outputs.website }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: npm
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@ucm-it'
+          always-auth: true
+
+      - name: Get build string
+        uses: ucm-it/get-git-build-string@v1
+        id: git-build-string
+
+      - name: Build the website
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.node-auth-token }}
+          NEXT_PUBLIC_BUILD_STRING: ${{ steps.git-build-string.outputs.build-string }}
+          NEXT_PUBLIC_REPORTING_API_KEY: ${{ secrets.reporting-api-key }}
+          WEBSITE_HOST: ${{ needs.determine-environment.outputs.website }}
+        run: |
+          npm ci
+          npm run build:${{ needs.determine-environment.outputs.build-suffix }}
+          npx pui-upload-sourcemaps
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.iam-role-arn }}
+          aws-region: us-west-2
+
+      - name: Deploy to AWS
+        run: |
+          npm run deploy:${{ needs.determine-environment.outputs.build-suffix }}
+
+      - name: Invalidate Cloudfront cache
+        uses: chetan/invalidate-cloudfront-action@v2
+        if: needs.determine-environment.outputs.environment == 'Production'
+        env:
+          PATHS: /*
+          DISTRIBUTION: ${{ secrets.cloudfront-dist }}
+
+      - name: Send a message to Slack
+        uses: ucm-it/slack-deploy-notify@v1
+        if: always()
+        with:
+          channel-id: ${{ needs.determine-environment.outputs.slack-channel }}
+          deployment-url: ${{ needs.determine-environment.outputs.website }}
+          environment-name: ${{ needs.determine-environment.outputs.environment }}
+          project-name: ${{ inputs.project-name}}
+          slack-bot-token: ${{ secrets.slack-bot-token }}
+          status: ${{ job.status }}
