@@ -1,26 +1,39 @@
-name: JS CI Defaults
+# This is a reusable workflow for JavaScript projects that includes jobs for
+# linting, formatting, and unit testing. It is designed to be called from other
+# workflows, allowing for easy reuse across multiple repositories.
+#
+# https://docs.github.com/en/actions/sharing-automations/reusing-workflows
 
 on:
   workflow_call:
     inputs:
       disable-formatting:
-        required: false
         type: boolean
+        description: Disable the formatting job
+        required: false
         default: false
       disable-linting:
-        required: false
         type: boolean
+        description: Disable the linting job
+        required: false
         default: false
       disable-testing:
-        required: false
         type: boolean
+        description: Disable the unit testing job
+        required: false
         default: false
       node-version:
-        required: true
         type: string
+        description: |
+          The Node.js version to use; this value corresponds to `node-version`
+          in the `actions/setup-node` action.
+        required: true
         default: '20.x'
     secrets:
       node-auth-token:
+        description: |
+          The GitHub token used to authenticate with the npm registry. This is
+          required for installing packages from private repositories.
         required: true
 
 jobs:
@@ -67,9 +80,6 @@ jobs:
           registry-url: 'https://npm.pkg.github.com'
           scope: '@ucm-it'
           always-auth: true
-
-      - name: Install shfmt for formatting
-        uses: mfinelli/setup-shfmt@v3
 
       - name: Install dependency packages and run formatters
         env:
