@@ -1,0 +1,13 @@
+{
+  "name": "JavaScript CI Defaults",
+  "description": "Workflow template that handles JavaScript CI defaults such as formating, linting, and testing.",
+  "iconName": "octicon package-dependents",
+  "categories": [
+    "JavaScript",
+    "TypeScript"
+  ],
+  "filePatterns": [
+    "package.json$",
+    "turbo.json[c]?$"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+    "name": "Update Browserslist Database",
+    "description": "Workflow template that handles updating the Browserslist database.",
+    "iconName": "octicon browser",
+    "categories": [
+        "CSS"
+    ],
+    "filePatterns": [
+        "package.json$",
+        "turbo.json[c]?$"
+    ]
+}
