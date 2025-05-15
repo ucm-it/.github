@@ -1,0 +1,64 @@
+name: AWS Deployment
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      # This supports a tag format of v1.2.3
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+     
+      # or v1.2.3-rc.0
+      - 'v[0-9]+.[0-9]+.[0-9]+-[a-z]+\.[0-9]+'
+  workflow_dispatch:
+    inputs:
+      target_environment:
+        description: Target Environment
+        default: Development
+        type: environment
+        required: true
+
+jobs:
+  deploy-to-aws:
+    name: AWS Deployment
+    uses: ucm-it/.github/.github/workflows/aws-s3-deployment.yml@main
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      # TODO: Configure these conditions in the format expected by
+      # `@ucm-it/conditional-outputs` - https://github.com/ucm-it/conditional-outputs
+      conditions: |-
+        Development:
+          branches:
+            - main
+          outputs:
+            build-suffix: dev
+            slack-channel: C06XXXXXXXX
+            website: https://project.dev.ucmerced.edu/
+        
+        Test:
+          tags: ~semver-rc
+          outputs:
+            build-suffix: test
+            slack-channel: C06XXXXXXXX
+            website: https://project.test.ucmerced.edu/
+        
+        Production:
+          tags: ~semver
+          outputs:
+            build-suffix: prod
+            slack_channel: C06XXXXXXXX
+            website: https://project.ucmerced.edu/
+      node-version: '20.x'
+      project-name: 'Project Name'
+      target-environment: ${{ inputs.target_environment }}
+    secrets:
+      # TODO: Configure these secrets in the repository settings
+      cloudfront-dist: ${{ secrets.CLOUDFRONT_DIST }}
+      iam-role-arn: ${{ secrets.IAM_ROLE_ARN }}
+      reporting-api-key: ${{ secrets.NEXT_PUBLIC_REPORTING_API_KEY }}
+
+      # Global secrets that are automatically provided for you. Leave these alone.
+      node-auth-token: ${{ secrets.GH_PKG_READ }}
+      slack-bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
