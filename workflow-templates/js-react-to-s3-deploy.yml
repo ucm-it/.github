@@ -47,7 +47,7 @@ jobs:
         Production:
           tags: ~semver
           outputs:
-            build_suffix: prod
+            build-suffix: prod
             slack_channel: C06XXXXXXXX
             website: https://project.ucmerced.edu/
       node-version: '20.x'
