@@ -39,7 +39,7 @@ on:
 jobs:
   linting:
     name: Linting
-    if: ${{ inputs.disable-linting != 'true' }}
+    if: ${{ inputs.disable-linting == false }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -67,7 +67,7 @@ jobs:
  
   formatter:
     name: Formatting
-    if: ${{ inputs.disable-formatting != 'true' }}
+    if: ${{ inputs.disable-formatting == false }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -91,7 +91,7 @@ jobs:
 
   unit_test:
     name: Unit Testing
-    if: ${{ inputs.disable-testing != 'true' }}
+    if: ${{ inputs.disable-testing == false }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
