@@ -44,6 +44,11 @@ on:
           the build suffix and other environment-specific settings.
         required: false
     secrets:
+      token:
+        description: |
+          A GitHub token with at least read-only access to this repository to
+          view commits to communicate to Slack.
+        required: true
       cloudfront-dist:
         description: |
           The CloudFront distribution ID for the production environment; this
@@ -148,6 +153,7 @@ jobs:
         uses: ucm-it/slack-deploy-notify@v1
         if: always()
         with:
+          token: ${{ secrets.token }}
           channel-id: ${{ needs.determine-environment.outputs.slack-channel }}
           deployment-url: ${{ needs.determine-environment.outputs.website }}
           environment-name: ${{ needs.determine-environment.outputs.environment }}
