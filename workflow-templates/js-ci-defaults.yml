@@ -7,7 +7,7 @@ on:
 jobs:
   default-ci:
     name: JS CI Defaults
-    uses: ucm-it/.github/.github/workflows/common-ci-js.yml@main
+    uses: ucm-it/.github/.github/workflows/common-ci-js.yml@common-ci-js/v1
     permissions:
       contents: read
     with:

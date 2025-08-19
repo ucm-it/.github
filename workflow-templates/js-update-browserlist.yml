@@ -10,7 +10,7 @@ on:
 jobs:
   update-bl-database:
     name: Browserlist DB
-    uses: ucm-it/.github/.github/workflows/update-browserlist.yml@main
+    uses: ucm-it/.github/.github/workflows/update-browserlist.yml@update-browserlist/v1
     permissions:
       contents: write
       pull-requests: write

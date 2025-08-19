@@ -21,7 +21,7 @@ on:
 jobs:
   deploy-to-aws:
     name: AWS Deployment
-    uses: ucm-it/.github/.github/workflows/aws-s3-deployment.yml@main
+    uses: ucm-it/.github/.github/workflows/aws-s3-deployment.yml@aws-s3-deployment/v1
     permissions:
       contents: read
       id-token: write
@@ -62,3 +62,4 @@ jobs:
       # Global secrets that are automatically provided for you. Leave these alone.
       node-auth-token: ${{ secrets.GH_PKG_READ }}
       slack-bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
+      token: ${{ secrets.GH_DEPLOYS_READ }}
