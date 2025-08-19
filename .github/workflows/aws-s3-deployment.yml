@@ -150,7 +150,7 @@ jobs:
           DISTRIBUTION: ${{ secrets.cloudfront-dist }}
 
       - name: Send a message to Slack
-        uses: ucm-it/slack-deploy-notify@v1
+        uses: ucm-it/slack-deploy-notify@v2
         if: always()
         with:
           token: ${{ secrets.token }}
