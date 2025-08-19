@@ -1,4 +1,4 @@
-name: npm Monorepo Package Publishing
+name: npm Package Publishing
 
 on:
   push:
@@ -18,11 +18,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Publish Packages
-        uses: ucm-it/npm-smart-publish@v1
+        uses: ucm-it/npm-smart-publish@v2
         with:
+          npm-token: ${{ secrets.GH_PKG_READ }}
           token: ${{ secrets.GITHUB_TOKEN }}
           exclude: |
             tsconfig
