@@ -129,6 +129,7 @@ jobs:
           npm run build:${{ needs.determine-environment.outputs.build-suffix }}
 
           if [ -n "${{ secrets.reporting-api-key }}" ]; then
+            echo "Reporting API key is set, uploading source maps..."
             npx pui-upload-sourcemaps
           fi
 
