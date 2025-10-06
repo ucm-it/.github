@@ -54,7 +54,7 @@ jobs:
           always-auth: true
 
       - name: actionlint
-        uses: raven-actions/actionlint@v2
+        uses: allejo/actionlint@main
         with:
           pyflakes: false
 
