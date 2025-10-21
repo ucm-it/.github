@@ -53,8 +53,10 @@ jobs:
           scope: '@ucm-it'
           always-auth: true
 
+      # FIXME: Change this step back to `@v2` once PR #43 is included in the `v2` tag
+      # See https://github.com/raven-actions/actionlint/pull/43
       - name: actionlint
-        uses: raven-actions/actionlint@v2
+        uses: raven-actions/actionlint@fd1b743
         with:
           pyflakes: false
 
