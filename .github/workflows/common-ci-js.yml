@@ -56,7 +56,7 @@ jobs:
       # FIXME: Change this step back to `@v2` once PR #43 is included in the `v2` tag
       # See https://github.com/raven-actions/actionlint/pull/43
       - name: actionlint
-        uses: raven-actions/actionlint@fd1b743
+        uses: raven-actions/actionlint@fd1b743b251ce06a07f899ad2e53e238e94df30d
         with:
           pyflakes: false
 
