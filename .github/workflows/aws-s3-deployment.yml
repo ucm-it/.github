@@ -29,7 +29,7 @@ on:
         description: |
           The Node.js version to use; this value corresponds to `node-version`
           in the `actions/setup-node` action.
-        required: true
+        required: false
         default: '20.x'
       project-name:
         type: string
