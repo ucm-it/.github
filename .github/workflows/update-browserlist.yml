@@ -7,7 +7,29 @@
 
 on:
   workflow_call:
+    inputs:
+      node-version:
+        type: string
+        description: |
+          The Node.js version to use; this value corresponds to `node-version`
+          in the `actions/setup-node` action.
+        required: true
+        default: '20.x'
+      workspace-dir:
+        type: string
+        description: |
+          The directory where the `package.json` file is located; this is used to
+          set the working directory for the action. This is useful for monorepos
+          where the target `package.json` file may not be in the root of the
+          repository.
+        required: false
+        default: '.'
     secrets:
+      node-auth-token:
+        description: |
+          The GitHub token used to authenticate with the npm registry. This is
+          required for installing packages from private repositories.
+        required: false
       token:
         description: |
           The GitHub token used to authenticate with the GitHub API; this is
@@ -32,8 +54,18 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: npm
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@ucm-it'
+          always-auth: true
+
       - name: Update Browserslist DB and (maybe) Create PR
         uses: c2corg/browserslist-update-action@v2
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.node-auth-token }}
         with:
           github_token: ${{ secrets.token }}
           branch: bl-update
