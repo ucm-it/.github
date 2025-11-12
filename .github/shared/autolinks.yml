@@ -1,0 +1,9 @@
+base_url: "https://ucmerced.atlassian.net/browse/"
+prefixes:
+  alphanumeric:
+    - DIR
+    - EKP
+    - IAM
+    - PURR
+    - PUI
+    - SIR
