@@ -4,7 +4,7 @@ prefixes:
     - DIR
     - EKP
     - IAM
-    - key: PURR
-      alias: PUI
-    - PUI
+    - key: PUI
+      alias: PURR
+    - PURR
     - SIR
