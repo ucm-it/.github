@@ -65,6 +65,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.node-auth-token }}
         run: |
           npm ci
+          npm run build
           npm run lint
  
   formatter:
@@ -88,6 +89,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.node-auth-token }}
         run: |
           npm ci
+          npm run build
           npm run format
           git diff --exit-code
 
