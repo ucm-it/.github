@@ -1,0 +1,31 @@
+name: Format Check
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Run format check
+        run: make format
+
+      - name: Check for changes
+        run: |
+          if git diff --exit-code; then
+            echo "✓ All files are properly formatted"
+          else
+            echo "✗ Files have formatting issues"
+            git diff
+            exit 1
+          fi
