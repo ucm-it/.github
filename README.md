@@ -18,6 +18,19 @@ Makefile                     # Build and tagging automation
 - `npm-monorepo-publishing` - Publishing workflows for npm monorepos
 - `sonar-qube` - SonarQube code quality analysis integration
 
+## Ruleset Recipes
+
+This repository includes GitHub ruleset configurations for branch and tag protection strategies.
+
+### Branch Rulesets
+
+- `Protect Main Branch` - Enforces protection rules for the main branch
+
+### Tag Rulesets
+
+- `Enforce SemVer Tags` - Ensures all tags follow semantic versioning format prefixed with a `v`.
+- `Enforce Prefixed SemVer Tags` - Ensures all tags follow prefixed semantic versioning format (e.g., `project/v1.0.0`)
+
 ## Makefile Commands
 
 ### Format Files

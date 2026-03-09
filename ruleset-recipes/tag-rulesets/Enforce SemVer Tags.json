@@ -1,0 +1,37 @@
+{
+  "id": 13692727,
+  "name": "Enforce SemVer Tags",
+  "target": "tag",
+  "source_type": "Repository",
+  "source": "ucm-it/vlad-ruleset-demo",
+  "enforcement": "active",
+  "conditions": {
+    "ref_name": {
+      "exclude": [],
+      "include": [
+        "~ALL"
+      ]
+    }
+  },
+  "rules": [
+    {
+      "type": "update"
+    },
+    {
+      "type": "deletion"
+    },
+    {
+      "type": "non_fast_forward"
+    },
+    {
+      "type": "tag_name_pattern",
+      "parameters": {
+        "operator": "regex",
+        "pattern": "v(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?",
+        "negate": false,
+        "name": "Tag name must match package-prefixed semantic versioning pattern"
+      }
+    }
+  ],
+  "bypass_actors": []
+}
