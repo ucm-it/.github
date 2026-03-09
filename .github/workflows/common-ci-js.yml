@@ -7,6 +7,13 @@
 on:
   workflow_call:
     inputs:
+      build-script:
+        type: string
+        description: |
+          The command to build the project. This is required for the linting and
+          formatting jobs, as they may depend on the build output.
+        required: false
+        default: 'build'
       disable-formatting:
         type: boolean
         description: Disable the formatting job
@@ -65,7 +72,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.node-auth-token }}
         run: |
           npm ci
-          npm run build
+          npm run ${{ inputs.build-script }}
           npm run lint
  
   formatter:
@@ -89,7 +96,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.node-auth-token }}
         run: |
           npm ci
-          npm run build
+          npm run ${{ inputs.build-script }}
           npm run format
           git diff --exit-code
 
@@ -114,5 +121,5 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.node-auth-token }}
         run: |
           npm ci
-          npm run build
+          npm run ${{ inputs.build-script }}
           npm run test
