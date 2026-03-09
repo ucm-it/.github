@@ -1,7 +1,7 @@
 .PHONY: tag push-tags
 
 format:
-	@if ! command -v npx &> /dev/null; then \
+	@if ! which npx > /dev/null 2>&1; then \
 		echo "Error: npx is not installed"; \
 		exit 1; \
 	fi
