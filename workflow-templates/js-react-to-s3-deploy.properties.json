@@ -1,14 +1,7 @@
 {
-    "name": "React to AWS S3 Bucket Deploy",
-    "description": "Workflow template that handles deploying a React app to an AWS S3 bucket.",
-    "iconName": "octicon upload",
-    "categories": [
-        "JavaScript",
-        "Next.js",
-        "TypeScript"
-    ],
-    "filePatterns": [
-        "package.json$",
-        "turbo.json[c]?$"
-    ]
+  "name": "React to AWS S3 Bucket Deploy",
+  "description": "Workflow template that handles deploying a React app to an AWS S3 bucket.",
+  "iconName": "octicon upload",
+  "categories": ["JavaScript", "Next.js", "TypeScript"],
+  "filePatterns": ["package.json$", "turbo.json[c]?$"]
 }

@@ -1,5 +1,12 @@
 .PHONY: tag push-tags
 
+format:
+	@if ! command -v npx &> /dev/null; then \
+		echo "Error: npx is not installed"; \
+		exit 1; \
+	fi
+	npx prettier --list-different --write "**/*.{md,yml,json}"
+
 tag:
 	@if [ -z "$(word 2,$(MAKECMDGOALS))" ]; then \
 		echo "Error: Please provide a tag name (e.g., make tag common-ci-js/v1.0.7)"; \

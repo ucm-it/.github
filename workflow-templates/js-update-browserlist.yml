@@ -4,7 +4,7 @@ on:
   schedule:
     # Run at 2:00 AM on the 1st and 15th of every month
     # https://crontab.guru/#0_2_1,15_*_*
-    - cron: '0 2 1,15 * *'
+    - cron: "0 2 1,15 * *"
   workflow_dispatch:
 
 jobs:

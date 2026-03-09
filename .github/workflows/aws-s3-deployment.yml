@@ -7,7 +7,7 @@
 #
 # These permissions need to be set by the caller workflow!
 # https://github.com/orgs/community/discussions/76409#discussioncomment-11260212
-# 
+#
 # ```
 # permissions:
 #   contents: read
@@ -30,7 +30,7 @@ on:
           The Node.js version to use; this value corresponds to `node-version`
           in the `actions/setup-node` action.
         required: false
-        default: '20.x'
+        default: "20.x"
       project-name:
         type: string
         description: |
@@ -110,8 +110,8 @@ jobs:
         with:
           node-version: ${{ inputs.node-version }}
           cache: npm
-          registry-url: 'https://npm.pkg.github.com'
-          scope: '@ucm-it'
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@ucm-it"
           always-auth: true
 
       - name: Get build string

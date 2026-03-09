@@ -11,6 +11,6 @@ jobs:
     permissions:
       contents: read
     with:
-      node-version: '20.x'
+      node-version: "20.x"
     secrets:
       node-auth-token: ${{ secrets.GH_PKG_READ }}

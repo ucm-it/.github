@@ -20,6 +20,14 @@ Makefile                     # Build and tagging automation
 
 ## Makefile Commands
 
+### Format Files
+
+```bash
+make format
+```
+
+Formats all markdown (`.md`), YAML (`.yml`), and JSON (`.json`) files in the repository using Prettier.
+
 ### Create a Tag
 
 ```bash
@@ -35,6 +43,7 @@ make tag common-ci-js/v1.0.7
 ```
 
 This will:
+
 1. Validate that `.github/workflows/common-ci-js.yml` exists
 2. Create a tag `common-ci-js/v1.0.7`
 3. Force update the major version tag `common-ci-js/v1` to point to the same commit

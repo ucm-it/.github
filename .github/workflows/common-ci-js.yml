@@ -13,7 +13,7 @@ on:
           The command to build the project. This is required for the linting and
           formatting jobs, as they may depend on the build output.
         required: false
-        default: 'build'
+        default: "build"
       disable-formatting:
         type: boolean
         description: Disable the formatting job
@@ -35,7 +35,7 @@ on:
           The Node.js version to use; this value corresponds to `node-version`
           in the `actions/setup-node` action.
         required: false
-        default: '20.x'
+        default: "20.x"
     secrets:
       node-auth-token:
         description: |
@@ -56,8 +56,8 @@ jobs:
         with:
           node-version: ${{ inputs.node-version }}
           cache: npm
-          registry-url: 'https://npm.pkg.github.com'
-          scope: '@ucm-it'
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@ucm-it"
           always-auth: true
 
       - name: actionlint
@@ -74,7 +74,7 @@ jobs:
           npm ci
           npm run ${{ inputs.build-script }}
           npm run lint
- 
+
   formatter:
     name: Formatting
     if: ${{ inputs.disable-formatting == false }}
@@ -87,8 +87,8 @@ jobs:
         with:
           node-version: ${{ inputs.node-version }}
           cache: npm
-          registry-url: 'https://npm.pkg.github.com'
-          scope: '@ucm-it'
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@ucm-it"
           always-auth: true
 
       - name: Install dependency packages and run formatters
@@ -112,8 +112,8 @@ jobs:
         with:
           node-version: ${{ inputs.node-version }}
           cache: npm
-          registry-url: 'https://npm.pkg.github.com'
-          scope: '@ucm-it'
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@ucm-it"
           always-auth: true
 
       - name: Install dependency packages and run unit tests
