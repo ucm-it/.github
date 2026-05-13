@@ -24,6 +24,14 @@ on:
           in the `conditional-outputs` action to set the build suffix and other
           environment-specific settings.
         required: true
+      force-ignore-dependency-warnings:
+        type: boolean
+        description: |
+          Use `--force` when installing dependencies to ignore peer dependency
+          warnings. This is useful when using packages that have not yet updated
+          their peer dependencies to include support for newer libraries.
+        required: false
+        default: false
       node-version:
         type: string
         description: |
@@ -125,7 +133,7 @@ jobs:
           NEXT_PUBLIC_REPORTING_API_KEY: ${{ secrets.reporting-api-key }}
           WEBSITE_HOST: ${{ needs.determine-environment.outputs.website }}
         run: |
-          npm ci
+          npm ci ${{ inputs.force-ignore-dependency-warnings == true && '--force' || '' }}
           npm run build:${{ needs.determine-environment.outputs.build-suffix }}
 
           if [ -n "${{ secrets.reporting-api-key }}" ]; then
