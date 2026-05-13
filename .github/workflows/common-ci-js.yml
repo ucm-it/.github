@@ -29,6 +29,14 @@ on:
         description: Disable the unit testing job
         required: false
         default: false
+      force-ignore-dependency-warnings:
+        type: boolean
+        description: |
+          Use `--force` when installing dependencies to ignore peer dependency
+          warnings. This is useful when using packages that have not yet updated
+          their peer dependencies to include support for newer libraries.
+        required: false
+        default: false
       node-version:
         type: string
         description: |
@@ -71,7 +79,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.node-auth-token }}
         run: |
-          npm ci
+          npm ci ${{ inputs.force-ignore-dependency-warnings == true && '--force' || '' }}
           npm run ${{ inputs.build-script }}
           npm run lint
 
@@ -95,7 +103,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.node-auth-token }}
         run: |
-          npm ci
+          npm ci ${{ inputs.force-ignore-dependency-warnings == true && '--force' || '' }}
           npm run ${{ inputs.build-script }}
           npm run format
           git diff --exit-code
@@ -120,6 +128,6 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.node-auth-token }}
         run: |
-          npm ci
+          npm ci ${{ inputs.force-ignore-dependency-warnings == true && '--force' || '' }}
           npm run ${{ inputs.build-script }}
           npm run test
