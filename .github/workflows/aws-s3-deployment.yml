@@ -132,6 +132,9 @@ jobs:
           NEXT_PUBLIC_BUILD_STRING: ${{ steps.git-build-string.outputs.build-string }}
           NEXT_PUBLIC_REPORTING_API_KEY: ${{ secrets.reporting-api-key }}
           WEBSITE_HOST: ${{ needs.determine-environment.outputs.website }}
+          # TODO: Drop CRA support when we no longer have any CRA apps
+          REACT_APP_BUILD_STRING: ${{ steps.git-build-string.outputs.build-string }}
+          REACT_APP_REPORTING_API_KEY: ${{ secrets.reporting-api-key }}
         run: |
           npm ci ${{ inputs.force-ignore-dependency-warnings == true && '--force' || '' }}
           npm run build:${{ needs.determine-environment.outputs.build-suffix }}
